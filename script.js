@@ -1,0 +1,115 @@
+const workSelect = document.getElementById('work-time');
+const restSelect = document.getElementById('rest-time');
+const roundsInput = document.getElementById('rounds');
+const totalTimeDisplay = document.getElementById('total-time');
+const countdownDisplay = document.getElementById('countdown');
+
+let timerInterval = null;
+let isRunning = false;
+let currentRound = 0;
+let currentPhase = 'work';
+let remainingTime = 0;
+let workTime, restTime, rounds;
+
+function populateSelect(select, step, max) {
+  for (let i = step; i <= max; i += step) {
+    const option = document.createElement('option');
+    option.value = i;
+    option.textContent = \`\${Math.floor(i/60)}:\${String(i%60).padStart(2, '0')}\`;
+    select.appendChild(option);
+  }
+}
+
+populateSelect(workSelect, 30, 600);
+populateSelect(restSelect, 10, 300);
+
+function updateTotalTime() {
+  const work = parseInt(workSelect.value || 0);
+  const rest = parseInt(restSelect.value || 0);
+  const reps = parseInt(roundsInput.value || 0);
+  const total = reps * (work + rest);
+  totalTimeDisplay.textContent = 'Gesamtzeit: ' + formatTime(total);
+}
+
+workSelect.addEventListener('change', updateTotalTime);
+restSelect.addEventListener('change', updateTotalTime);
+roundsInput.addEventListener('input', updateTotalTime);
+
+function formatTime(seconds) {
+  const min = Math.floor(seconds / 60);
+  const sec = seconds % 60;
+  return \`\${String(min).padStart(2, '0')}:\${String(sec).padStart(2, '0')}\`;
+}
+
+function beep(frequency, duration) {
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const oscillator = audioCtx.createOscillator();
+  const gainNode = audioCtx.createGain();
+
+  oscillator.connect(gainNode);
+  gainNode.connect(audioCtx.destination);
+
+  oscillator.type = 'sine';
+  oscillator.frequency.value = frequency;
+  oscillator.start();
+
+  gainNode.gain.setValueAtTime(1, audioCtx.currentTime);
+  gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration / 1000);
+
+  oscillator.stop(audioCtx.currentTime + duration / 1000);
+}
+
+function tripleBeep() {
+  beep(400, 600);
+  setTimeout(() => beep(400, 600), 800);
+  setTimeout(() => beep(400, 600), 1600);
+}
+
+function startTimer() {
+  if (isRunning) return;
+
+  workTime = parseInt(workSelect.value || 0);
+  restTime = parseInt(restSelect.value || 0);
+  rounds = parseInt(roundsInput.value || 0);
+  if (!workTime || !rounds) return;
+
+  isRunning = true;
+  currentRound = 0;
+  currentPhase = 'work';
+  remainingTime = workTime;
+  beep(800, 300); // start work
+  runCountdown();
+}
+
+function runCountdown() {
+  countdownDisplay.textContent = \`Timer: \${formatTime(remainingTime)}\`;
+  timerInterval = setInterval(() => {
+    remainingTime--;
+    countdownDisplay.textContent = \`Timer: \${formatTime(remainingTime)}\`;
+    if (remainingTime <= 0) {
+      if (currentPhase === 'work') {
+        currentPhase = 'rest';
+        remainingTime = restTime;
+        if (restTime > 0) beep(500, 300); // pause beep
+      } else {
+        currentRound++;
+        if (currentRound >= rounds) {
+          stopTimer();
+          tripleBeep();
+          return;
+        }
+        currentPhase = 'work';
+        remainingTime = workTime;
+        beep(800, 300); // work beep
+      }
+    }
+  }, 1000);
+}
+
+function stopTimer() {
+  clearInterval(timerInterval);
+  isRunning = false;
+  countdownDisplay.textContent = 'Timer: 00:00';
+}
+
+updateTotalTime();
