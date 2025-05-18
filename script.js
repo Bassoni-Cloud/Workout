@@ -60,8 +60,8 @@ function beep(frequency, duration) {
 
 function tripleBeep() {
   beep(1200, 1000);
-  setTimeout(() => beep(1200, 2000), 2200);
-  setTimeout(() => beep(1200, 2000), 4400);
+  setTimeout(() => beep(1200, 1000), 2200);
+  setTimeout(() => beep(1200, 1000), 4400);
 }
 
 function startTimer() {

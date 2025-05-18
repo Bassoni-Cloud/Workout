@@ -1,27 +1,38 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Workout Timer</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <h1>Workout Timer</h1>
+
   <div class="controls">
-    <label for="work-time">Arbeitszeit:</label>
-    <select id="work-time"></select>
-    <label for="rest-time">Pausenzeit:</label>
-    <select id="rest-time"></select>
-    <label for="rounds">Wiederholungen:</label>
-    <input type="number" id="rounds" min="1" value="1">
+    <label>
+      Arbeit:
+      <select id="work-time"></select>
+    </label>
+
+    <label>
+      Pause:
+      <select id="rest-time"></select>
+    </label>
+
+    <label>
+      Wiederholungen:
+      <input type="number" id="rounds" min="1" value="1" />
+    </label>
   </div>
 
-  <div class="time-display" id="total-time">Gesamtzeit: 00:00</div>
-  <div class="time-display" id="countdown">Timer: 00:00</div>
+  <div id="total-time">Gesamtzeit: 00:00</div>
+  <div id="countdown">Timer: 00:00</div>
 
-  <button onclick="startTimer()">Start</button>
-  <button onclick="stopTimer()">Stop</button>
+  <div class="buttons">
+    <button onclick="startTimer()">Start</button>
+    <button onclick="stopTimer()">Stopp</button>
+  </div>
 
   <script src="script.js"></script>
 </body>
