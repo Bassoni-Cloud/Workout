@@ -11,17 +11,18 @@ let currentPhase = 'work';
 let remainingTime = 0;
 let workTime, restTime, rounds;
 
-function populateSelect(select, step, max) {
+function populateSelect(select, step, max, defaultValue) {
   for (let i = step; i <= max; i += step) {
     const option = document.createElement('option');
     option.value = i;
-    option.textContent = \`\${Math.floor(i/60)}:\${String(i%60).padStart(2, '0')}\`;
+    option.textContent = `${Math.floor(i / 60)}:${String(i % 60).padStart(2, '0')}`;
     select.appendChild(option);
   }
+  select.value = defaultValue;
 }
 
-populateSelect(workSelect, 30, 600);
-populateSelect(restSelect, 10, 300);
+populateSelect(workSelect, 30, 600, 60); // Standard: 60s Arbeit
+populateSelect(restSelect, 10, 300, 30); // Standard: 30s Pause
 
 function updateTotalTime() {
   const work = parseInt(workSelect.value || 0);
@@ -38,7 +39,7 @@ roundsInput.addEventListener('input', updateTotalTime);
 function formatTime(seconds) {
   const min = Math.floor(seconds / 60);
   const sec = seconds % 60;
-  return \`\${String(min).padStart(2, '0')}:\${String(sec).padStart(2, '0')}\`;
+  return `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
 }
 
 function beep(frequency, duration) {
@@ -82,10 +83,10 @@ function startTimer() {
 }
 
 function runCountdown() {
-  countdownDisplay.textContent = \`Timer: \${formatTime(remainingTime)}\`;
+  countdownDisplay.textContent = `Timer: ${formatTime(remainingTime)}`;
   timerInterval = setInterval(() => {
     remainingTime--;
-    countdownDisplay.textContent = \`Timer: \${formatTime(remainingTime)}\`;
+    countdownDisplay.textContent = `Timer: ${formatTime(remainingTime)}`;
     if (remainingTime <= 0) {
       if (currentPhase === 'work') {
         currentPhase = 'rest';
