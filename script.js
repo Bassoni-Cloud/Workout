@@ -1,5 +1,6 @@
 const workSelect = document.getElementById('work-time');
 const restSelect = document.getElementById('rest-time');
+const roundsSelect = document.getElementById('rounds');
 const roundsInput = document.getElementById('rounds');
 const totalTimeDisplay = document.getElementById('total-time');
 const countdownDisplay = document.getElementById('countdown');
@@ -10,6 +11,19 @@ let currentRound = 0;
 let currentPhase = 'work';
 let remainingTime = 0;
 let workTime, restTime, rounds;
+
+function populateRounds(select, max, defaultValue) {
+  for (let i = 1; i <= max; i++) {
+    const option = document.createElement('option');
+    option.value = i;
+    option.textContent = i;
+    select.appendChild(option);
+  }
+  select.value = defaultValue;
+}
+
+populateRounds(roundsSelect, 15, 1);
+
 
 function populateSelect(select, step, max, defaultValue) {
   for (let i = step; i <= max; i += step) {
@@ -27,7 +41,7 @@ populateSelect(restSelect, 10, 300, 30);
 function updateTotalTime() {
   const work = parseInt(workSelect.value || 0);
   const rest = parseInt(restSelect.value || 0);
-  const reps = parseInt(roundsInput.value || 0);
+  const reps = parseInt(roundsSelect.value || 0);
   const total = reps * (work + rest);
   totalTimeDisplay.textContent = 'Gesamtzeit: ' + formatTime(total);
 }
@@ -53,15 +67,25 @@ function beep(frequency, duration) {
   oscillator.type = 'sine';
   oscillator.frequency.value = frequency;
 
-  gainNode.gain.setValueAtTime(1, audioCtx.currentTime); // konstant laut
+  gainNode.gain.setValueAtTime(1, audioCtx.currentTime);
   oscillator.start();
-  oscillator.stop(audioCtx.currentTime + duration / 1000); // exakt nach Dauer stoppen
+  oscillator.stop(audioCtx.currentTime + duration / 1000);
 }
 
 function tripleBeep() {
   beep(1200, 1000);
   setTimeout(() => beep(1200, 1000), 2200);
   setTimeout(() => beep(1200, 1000), 4400);
+}
+
+function updateBackground() {
+  if (currentPhase === 'work') {
+    document.body.style.backgroundColor = '#8B0000';
+    countdownDisplay.textContent = `Arbeit – ${formatTime(remainingTime)}`;
+  } else {
+    document.body.style.backgroundColor = '#006400';
+    countdownDisplay.textContent = `Pause – ${formatTime(remainingTime)}`;
+  }
 }
 
 function startTimer() {
@@ -76,19 +100,9 @@ function startTimer() {
   currentRound = 0;
   currentPhase = 'work';
   remainingTime = workTime;
-  beep(1000, 1000); // Arbeit starten
+  beep(1500, 1000); // Start Arbeit
   updateBackground();
   runCountdown();
-}
-
-function updateBackground() {
-  if (currentPhase === 'work') {
-    document.body.style.backgroundColor = '#8B0000'; // Dunkelrot
-    countdownDisplay.textContent = `Arbeit – ${formatTime(remainingTime)}`;
-  } else {
-    document.body.style.backgroundColor = '#006400'; // Dunkelgrün
-    countdownDisplay.textContent = `Pause – ${formatTime(remainingTime)}`;
-  }
 }
 
 function runCountdown() {
@@ -96,21 +110,22 @@ function runCountdown() {
   timerInterval = setInterval(() => {
     remainingTime--;
     updateBackground();
+
     if (remainingTime <= 0) {
       if (currentPhase === 'work') {
         currentPhase = 'rest';
         remainingTime = restTime;
-        if (restTime > 0) beep(1000, 1000); // Pause-Beeep
+        if (restTime > 0) beep(1300, 1000); // Wechsel zu Pause
       } else {
         currentRound++;
         if (currentRound >= rounds) {
           stopTimer();
-          tripleBeep();
+          tripleBeep(); // Ende
           return;
         }
         currentPhase = 'work';
         remainingTime = workTime;
-        beep(1500, 1000); // Arbeit-Beeep
+        beep(1500, 1000); // Wechsel zu Arbeit
       }
       updateBackground();
     }
