@@ -11,6 +11,13 @@ let currentRound = 0;
 let currentPhase = 'work';
 let remainingTime = 0;
 let workTime, restTime, rounds;
+let audioCtx = null;
+
+function initAudio() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+}
 
 function populateRounds(select, max, defaultValue) {
   for (let i = 1; i <= max; i++) {
@@ -57,7 +64,8 @@ function formatTime(seconds) {
 }
 
 function beep(frequency, duration) {
-  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (!audioCtx) return; // Sicherheitsprüfung
+
   const oscillator = audioCtx.createOscillator();
   const gainNode = audioCtx.createGain();
 
@@ -71,6 +79,7 @@ function beep(frequency, duration) {
   oscillator.start();
   oscillator.stop(audioCtx.currentTime + duration / 1000);
 }
+
 
 function tripleBeep() {
   beep(1200, 1000);
@@ -89,6 +98,8 @@ function updateBackground() {
 }
 
 function startTimer() {
+  initAudio(); // Initialisiert AudioContext bei erstem Klick
+
   if (isRunning) return;
 
   workTime = parseInt(workSelect.value || 0);
