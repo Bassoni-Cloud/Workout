@@ -11,13 +11,32 @@ let currentPhase = 'work';
 let remainingTime = 0;
 let workTime, restTime, rounds;
 
-// iPhone-Fix: einmalig erstellter AudioContext
 let audioCtx = null;
+let unlocked = false;
+
 function initAudio() {
   if (!audioCtx) {
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    // Dummy-Ton zur Aktivierung auf iOS
+    const buffer = audioCtx.createBuffer(1, 1, 22050);
+    const source = audioCtx.createBufferSource();
+    source.buffer = buffer;
+    source.connect(audioCtx.destination);
+    if (source.start) {
+      source.start(0);
+    } else if (source.noteOn) {
+      source.noteOn(0);
+    }
+
+    // ➕ Extra Sicherheit: AudioContext aktivieren
+    audioCtx.resume().catch((e) => console.log('AudioContext resume error:', e));
+
+    unlocked = true;
   }
 }
+
+
 
 function beep(frequency, duration) {
   if (!audioCtx) return; // kein Context = kein Ton
