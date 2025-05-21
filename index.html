@@ -11,6 +11,11 @@
 
   <div class="controls">
     <label>
+      Vorlaufzeit:
+      <select id="prep-time"></select>
+    </label>
+
+    <label>
       Arbeitszeit:
       <select id="work-time"></select>
     </label>
@@ -24,11 +29,6 @@
       Wiederholungen:
       <select id="rounds"></select>
     </label>
-
-    <label>
-      Vorlaufzeit:
-      <select id="prep-time"></select>
-    </label>
   </div>
 
   <div id="total-time">Gesamtzeit: 00:00</div>
@@ -39,6 +39,7 @@
   <div class="buttons">
     <button onclick="startTimer()">Start</button>
     <button onclick="stopTimer()">Stop</button>
+    <button onclick="testBeep()">Testton</button>
   </div>
 
   <script src="script.js"></script>
