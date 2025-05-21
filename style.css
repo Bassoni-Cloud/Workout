@@ -21,9 +21,9 @@ label, select, input {
   margin-bottom: 1.5rem;
 }
 
-.time-display {
+#total-time, #remaining-total, #phase-indicator, #countdown {
   font-size: 2rem;
-  margin: 1rem 0;
+  margin: 0.5rem 0;
 }
 
 button {
@@ -31,4 +31,4 @@ button {
   margin: 0.5rem;
   padding: 0.5rem 1rem;
   cursor: pointer;
-} 
+}

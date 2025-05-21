@@ -24,18 +24,23 @@
       Wiederholungen:
       <select id="rounds"></select>
     </label>
+
+    <label>
+      Vorlaufzeit:
+      <select id="prep-time"></select>
+    </label>
   </div>
 
   <div id="total-time">Gesamtzeit: 00:00</div>
+  <div id="remaining-total">Restgesamtzeit: 00:00</div>
+  <div id="phase-indicator">Phase 0 von 0</div>
   <div id="countdown">Timer: 00:00</div>
 
   <div class="buttons">
     <button onclick="startTimer()">Start</button>
     <button onclick="stopTimer()">Stop</button>
   </div>
-    <button onclick="beep(1000, 1000)">Testton</button>
-  </div>
-  
+
   <script src="script.js"></script>
 </body>
 </html>
