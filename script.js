@@ -77,11 +77,6 @@ function populateRounds(select, max, defaultValue) {
   select.value = defaultValue;
 }
 
-populateSelect(workSelect, 30, 600, 60);
-populateSelect(restSelect, 10, 300, 30);
-populateSelect(prepSelect, 10, 60, 10);
-populateRounds(roundsSelect, 15, 1);
-
 function updateTotalTime() {
   workTime = parseInt(workSelect.value || 0);
   restTime = parseInt(restSelect.value || 0);
@@ -174,4 +169,12 @@ function stopTimer() {
   phaseIndicator.textContent = 'Phase 0 von 0';
   remainingTotalDisplay.textContent = 'Restgesamtzeit: 00:00';
 }
-updateTotalTime();
+
+document.addEventListener("DOMContentLoaded", () => {
+  populateSelect(workSelect, 30, 600, 60);
+  populateSelect(restSelect, 10, 300, 30);
+  populateSelect(prepSelect, 10, 60, 10);
+  populateRounds(roundsSelect, 15, 1);
+  updateTotalTime();
+});
+
