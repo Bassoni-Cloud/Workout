@@ -18,6 +18,28 @@ let workTime, restTime, rounds, prepTime;
 let audioCtx = null;
 let unlocked = false;
 
+let wakeLock = null;
+
+async function keepScreenAwake() {
+  try {
+    if ('wakeLock' in navigator) {
+      wakeLock = await navigator.wakeLock.request('screen');
+      console.log('Wake lock aktiviert');
+    }
+  } catch (err) {
+    console.log(`Wake lock Fehler: ${err.name}, ${err.message}`);
+  }
+}
+
+function releaseWakeLock() {
+  if (wakeLock) {
+    wakeLock.release();
+    wakeLock = null;
+    console.log('Wake lock freigegeben');
+  }
+}
+
+
 function initAudio() {
   if (!audioCtx) {
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -120,6 +142,7 @@ function updateDisplays() {
 function startTimer() {
   if (isRunning) return;
   initAudio();
+  keepScreenAwake(); // Bildschirm aktiv halten
   updateTotalTime();
 
   isRunning = true;
@@ -165,6 +188,7 @@ function runCountdown() {
 function stopTimer() {
   clearInterval(timerInterval);
   isRunning = false;
+  releaseWakeLock(); // Bildschirm darf wieder ausgehen
   countdownDisplay.textContent = 'Timer: 00:00';
   phaseIndicator.textContent = 'Phase 0 von 0';
   remainingTotalDisplay.textContent = 'Restzeit: 00:00';
