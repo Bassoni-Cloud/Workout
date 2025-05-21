@@ -89,7 +89,7 @@ function updateTotalTime() {
 }
 
 function updateRemainingTimeDisplay() {
-  remainingTotalDisplay.textContent = 'Restgesamtzeit: ' + formatTime(totalRemainingTime);
+  remainingTotalDisplay.textContent = 'Restzeit: ' + formatTime(totalRemainingTime);
 }
 
 workSelect.addEventListener('change', updateTotalTime);
@@ -167,7 +167,7 @@ function stopTimer() {
   isRunning = false;
   countdownDisplay.textContent = 'Timer: 00:00';
   phaseIndicator.textContent = 'Phase 0 von 0';
-  remainingTotalDisplay.textContent = 'Restgesamtzeit: 00:00';
+  remainingTotalDisplay.textContent = 'Restzeit: 00:00';
 }
 
 document.addEventListener("DOMContentLoaded", () => {
