@@ -68,13 +68,13 @@ function beep(frequency, duration) {
 
 function testBeep() {
   initAudio();
-  beep(1000, 1000);
+  beep(1500, 1000);
 }
 
 function tripleBeep() {
-  beep(1200, 1000);
-  setTimeout(() => beep(1200, 1000), 1200);
-  setTimeout(() => beep(1200, 1000), 2400);
+  beep(1500, 1000);
+  setTimeout(() => beep(1500, 1000), 1200);
+  setTimeout(() => beep(1500, 1000), 2400);
 }
 
 function populateSelect(select, step, max, defaultValue) {
@@ -168,7 +168,7 @@ function runCountdown() {
       } else if (currentPhase === 'work') {
         currentPhase = 'rest';
         remainingTime = restTime;
-        if (restTime > 0) beep(1000, 1000);
+        if (restTime > 0) beep(1500, 1500);
       } else {
         currentRound++;
         if (currentRound >= rounds) {
